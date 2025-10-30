@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LiquiddGames - Games</title>
+<link rel="stylesheet" href="../css/style.css">
+<script defer src="../js/main.js"></script>
+</head>
+<body>
+<header>
+  <div><a href="../index.html">🎮 LiquiddGames</a></div>
+  <nav>
+    <a href="./index.html">Games</a>
+    <a href="../about.html">About</a>
+    <a href="../settings.html">Settings</a>
+  </nav>
+</header>
+
+<div class="game-grid" id="gameGrid"></div>
+
+<div class="modal" id="gameModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="gameTitle"></h2>
+      <button id="closeModal">✖</button>
+    </div>
+    <div class="modal-buttons">
+      <button id="fullscreenBtn">Fullscreen</button>
+      <button id="aboutBlankBtn">Open in about:blank</button>
+      <button id="copyLinkBtn">Copy Link</button>
+    </div>
+    <iframe id="gameFrame"></iframe>
+  </div>
+</div>
+
+<script>
+const games = [
+  "1v1lol","2048","8ball","amongus","basketballstars","bloonstd4","breakout",
+  "cannon-basketball-4","chess","clashroyale","cookie","crossyroad","cubefield",
+  "cuttherope","cuttheropeholiday","cuttheropetimetravel","dinosaur","doctor-acorn2",
+  "doctor-acorn3","doge2048","dogeminer","doodle-jump","driftboss","ducklife5",
+  "elasticmorty","fireboy-and-watergirl-1","fireboy-and-watergirl-2","fireboy-and-watergirl-3",
+  "fireboy-and-watergirl-4","flappy-2048","flappybird","fnaf","fnaf2","fnaf3","fnaf4",
+  "geometry","getaway-shootout","icypurplehead2","icypurplehead3","motox3m","pacman",
+  "paperio","physicsplayground","rabbit-samurai","rabbit-samurai2","retrobowl",
+  "rooftopsniper","run3","slitherio","slope","snake","spaceinvaders","stack",
+  "stacktower","survivio","templerun","tetris","there-is-no-game","tube-jumpers",
+  "vex3","vex4","vex5","wordle","yohohoio","zombsroyale"
+];
+
+const grid = document.getElementById('gameGrid');
+const modal = document.getElementById('gameModal');
+const gameTitle = document.getElementById('gameTitle');
+const gameFrame = document.getElementById('gameFrame');
+const closeModal = document.getElementById('closeModal');
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+const aboutBlankBtn = document.getElementById('aboutBlankBtn');
+const copyLinkBtn = document.getElementById('copyLinkBtn');
+
+const basePath = "./html5/";
+
+games.forEach(game => {
+  const div = document.createElement('div');
+  div.className = 'game-card';
+  div.textContent = game.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  div.onclick = () => openGame(game);
+  grid.appendChild(div);
+});
+
+function openGame(game) {
+  modal.style.display = 'flex';
+  gameTitle.textContent = game.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  const path = `${basePath}${game}/play/index.html`;
+  gameFrame.src = path;
+
+  fullscreenBtn.onclick = () => { if(gameFrame.requestFullscreen) gameFrame.requestFullscreen(); };
+
+  aboutBlankBtn.onclick = () => {
+    const newTab = window.open('about:blank', '_blank');
+    newTab.document.write(`<title>${game}</title><iframe src="${path}" style="border:none;width:100%;height:100vh;"></iframe>`);
+  };
+
+  copyLinkBtn.onclick = () => {
+    navigator.clipboard.writeText(path);
+    copyLinkBtn.textContent = "Copied!";
+    setTimeout(() => copyLinkBtn.textContent = "Copy Link", 1500);
+  };
+}
+
+closeModal.onclick = () => {
+  modal.style.display = 'none';
+  gameFrame.src = '';
+};
+
+window.onclick = e => { if(e.target === modal) closeModal.onclick(); };
+</script>
+</body>
+</html>
